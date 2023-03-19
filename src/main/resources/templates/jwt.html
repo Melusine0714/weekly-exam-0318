@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jwt</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<form>
+    <div id="app">
+        <div class="form-group">
+
+            <label for="key">KEY:</label>
+            <input type="text" v-model="jwtForm.key" name="key" class="form-control" id="key" placeholder="请输入KEY">
+            <label for="value">VALUE:</label>
+            <input type="text" v-model="jwtForm.value" name="value" class="form-control" id="value" placeholder="请输入VALUE">
+            <button id="getEmailCodeBtn" class="btn btn-primary" @click.prevent="getEmailCode">生成token</button>
+            <button id="getCodeBtn" class="btn btn-primary" @click.prevent="getToken">查看值</button>
+            <p v-text="userToken"></p>
+        </div>
+    </div>
+</form>
+
+<script>
+    console.log("------jwt-----")
+
+    let app = new Vue({
+        el:"#app",
+        data:{
+            errorInfo:'',
+            display:false,
+            jwtForm:{
+               key:'',
+                value:''
+            },
+        },
+        userToken:'',
+        methods:{
+            getEmailCode(){
+                console.log(this.jwtForm.key)
+                console.log(this.jwtForm.value)
+
+                if(!this.jwtForm.key){ //js里空字符串作为bool条件判断时等价于false
+                    alert("key不能为空");
+                    return;
+                }
+                if(!this.jwtForm.value){ //js里空字符串作为bool条件判断时等价于false
+                    alert("value不能为空");
+                    return;
+                }
+                $.post("jwt/toJwt",{key:this.jwtForm.key,
+                    value:this.jwtForm.value},function (data) {
+                    alert(data)
+                    console.log(data)
+                     this.userToken = data;
+                })
+
+            },
+            getToken(){
+                $.post("jwt/noJwt",{userToken:this.userToken},function (data) {
+                    alert(data)
+                    console.log(data)
+
+                })
+            },
+        },
+        created(){
+        }
+    })
+
+</script>
+</body>
+</html>
