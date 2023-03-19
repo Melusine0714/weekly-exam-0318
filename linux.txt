@@ -1,0 +1,28 @@
+1.su
+cd /
+mkdir 0318Lab
+
+2.cp /etc/ntp.conf /0318Lab myntp.conf
+
+3.cp /0318Lab/myntp.conf /0318Lab/  yourntp.pdf
+
+4.tar -czf ntp.tar.gz myntp.conf  yourntp.pdf
+
+5.rm myntp.conf
+rm yourntp.pdf
+6.tar -zxvf  ntp.tar.gz
+
+7. mkdirs  a/b/c/d/e
+
+8.mv ntp.tar.gz /0318Lab/a/b/c/d/e
+9.useradd <jiangziya>
+
+10.chown jiangziya:jiangziya myntp.conf
+11.chmod 754 myntp.conf
+
+12.touch readMe.txt
+vim readMe.txt
+i insert
+:wq!
+
+13.rm-rf /0318Lab
