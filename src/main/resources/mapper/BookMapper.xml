@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzwn.work0318.mapper.BookMapper">
+
+    <resultMap id="BaseResultMap" type="com.hzwn.work0318.pojo.Book">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="typeId" column="typeId" jdbcType="INTEGER"/>
+            <result property="provider" column="provider" jdbcType="VARCHAR"/>
+            <result property="author" column="author" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="detail" column="detail" jdbcType="VARCHAR"/>
+            <result property="imgSrc" column="imgsrc" jdbcType="VARCHAR"/>
+            <result property="collectionCount" column="collectioncount" jdbcType="INTEGER"/>
+            <result property="storeCount" column="storecount" jdbcType="INTEGER"/>
+            <result property="buyCount" column="buycount" jdbcType="INTEGER"/>
+            <result property="readCount" column="readcount" jdbcType="INTEGER"/>
+            <result property="createTime" column="createtime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,typeId,
+        provider,author,price,
+        detail,imgsrc,collectioncount,
+        storecount,buycount,readcount,
+        createtime,updatetime
+    </sql>
+</mapper>
