@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<!--<div th:insert="publicHeader.html"></div>-->
+<!--<script th:src="@{/js/publicHeader.js}"></script>-->
+<!--<a th:href= "publicHeader.html">圖書類型操作</a>-->
+
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+    <div class="container col-md-12">
+        <h3 style="text-align: center">商品列表</h3>
+    </div>
+    <div v-if="pageData.total<1">
+        <h2 th:align="center">暂无商品信息</h2>
+    </div>
+
+    <div class="container" v-if="pageData.total>0">
+
+        <div class="row">
+            <div class="col-sm-6 col-md-4" v-for="product in pageData.records">
+                <div class="thumbnail">
+                    <div class="caption text-left">
+                        <img :src="product.imgSrc" alt="..." class="col-sm-6 col-md-6"
+                             style="width: 140px;height: 130px">
+                        <p>書名:<span v-text="product.name">name</span>書名</p>
+                        <p>圖書出版社:<span v-text="product.provider">出版社</span></p>
+                        <p>出版時間:<span v-text="product.createTime">出版時間</span></p>
+                        <p>價格:<span v-text="product.price">價格</span>¥</p>
+                        <p>作者:<span v-text="product.author">作者</span></p>
+                        <p>庫存量:<span v-text="product.storeCount">庫存量</span></p>
+                        <p>點擊量:<span v-text="product.readCount">點擊量</span></p>
+                        <p>購買量:<span v-text="product.buyCount">購買量</span></p>
+
+                        <p>
+                            <a class="btn btn-primary" @click.prevent="seeDetail(product.id)">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="btn btn-success" @click.prevent="addToCart(product.id)">加入购物车</a>
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" align="center">
+            <div class="col-md-12 col-md-offset-5 col-lg-offset-4col-xl-offset-5" align="center">
+                <ul class="pagination justify-content-center">
+                    <li><a href="" @click.prevent="goPage(pageData.current-1)">上一页</a></li>
+                    <li><a href="" v-for="pageNum in pageData.pages" v-text="pageNum"
+                           @click.prevent="goPage(pageNum)">n</a></li>
+                    <li><a href="" @click.prevent="goPage(pageData.current+1)">下一页</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+
+<script>
+
+    let app = new Vue({
+        el: "#app",  //绑定元素
+        data: {  //vue使用的所有属性,都是kv形式的
+            // -----k:v 或者 k:{json對象} 或者k:[數組]
+            display: false,
+            displayMode: '',
+            id: 0,
+            productTypeId: 0,
+            productName: '',
+            productPrice: 0.00,
+            product_imgsrc: '',
+            createdTime: '',
+
+            pageData: {
+                current: 1,
+                size: 3,
+                total: -1,
+                records: [],//數組
+                pages: -1
+            }
+
+        },
+        methods: {  //方法
+            //寫法:  方法名(){對參數的修改等操作}
+            showAddStudent() {
+                this.display = true;//將display設置為true
+                this.displayMode = "add" //給displayMode賦值add
+            },
+            showPageInfo() {
+                //設置分頁的頁碼和每頁顯示的個數
+                let args = {
+                    current: this.pageData.current,
+                    size: this.pageData.size,
+                }
+                let vueObj = this;
+                $.post("/book/selectAll", args, function (data) {
+                    vueObj.pageData = data;
+                })
+            },
+            goPage(pageNum) {
+                if (pageNum < 1 || pageNum > this.pageData.pages || pageNum === this.pageData.current) {
+                    console.log("无效PageNum  " + pageNum)
+                    return
+                }
+
+                this.pageData.current = pageNum;
+                this.showPageInfo()
+            },
+            seeDetail(productId) {
+                console.log("去查看" + productId + "详情")
+                //把該商品的productId放入session隨著這次請求傳遞下去
+                sessionStorage.setItem("toSeeDetailProductId", productId)
+                // alert(productId)
+                location.href = "/singleProduct.html"
+            },
+            addToCart(productId) {
+                if (!publicHeaderApp.currentUserAccount) {
+                    alert("请先登录再加购商品")
+                    return
+                }
+                // alert(productId)
+
+                //加入购物车
+                $.post("/cart/add", {id: productId}, function (data) {
+                    if (data == "ok") {
+                        alert("加购成功")
+                    } else {
+                        alert(data)
+                    }
+                })
+            }
+        },
+        created() {
+            //生命周期中的方法,在vue对象创建完成时调用(頁面一加載就調用created方法)
+            this.showPageInfo();//只要頁面一打開 就會觸發showPageInfo()
+        }
+    })
+</script>
+</body>
+</html>
