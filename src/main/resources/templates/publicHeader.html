@@ -1,0 +1,54 @@
+<div class=" navbar navbar-default navbar-fixed-top" id="publicHeaderApp" th:fragment="publicHeader">
+  <div class="container-fluid" >
+
+    <div class="row">
+      <div class="col-md-12 text-center" style="background-color: cornflowerblue; color: white">
+        <a href="/" style="color: white"><h3>蜗牛书店</h3></a>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <form>
+        <a  @click="" class="btn btn-default btn-sm" href="booktype.html">类型管理</a>
+        <a  @click="" class="btn btn-default btn-sm" href="mail.html">邮件</a>
+        <a  @click="" class="btn btn-default btn-sm" href="jwt.html">JWT</a>
+      </form>
+
+    </div>
+    <!--正常查看-->
+    <div v-if ="editStatus == 1" class="row" style="margin-top: 10px">
+
+      <div class="col-md-6">
+        <!--图书类型列表-->
+        <ol class="breadcrumb">
+          <li v-for="booktype in bookTypeList">
+            <a href="" v-text="booktype.name" @click.prevent="seeBooksOfType(booktype.id)" >IT</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <!--修改-->
+    <div v-if ="editStatus == 2" class="row" style="margin-top: 10px">
+      <h3>修改</h3>
+      <div class="col-md-6">
+        <!--图书类型列表-->
+        <ol class="breadcrumb">
+          <li v-for="booktype in bookTypeList">
+            <a href="" v-text="booktype.name" @click.prevent="seeBooksOfType(booktype.id)" >IT</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <!--刪除-->
+    <div v-if ="editStatus == 3" class="row" style="margin-top: 10px">
+      <h3>刪除</h3>
+      <div class="col-md-6">
+        <!--图书类型列表-->
+        <ol class="breadcrumb">
+          <li v-for="booktype in bookTypeList">
+            <a href="" v-text="booktype.name" @click.prevent="seeBooksOfType(booktype.id)" >IT</a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

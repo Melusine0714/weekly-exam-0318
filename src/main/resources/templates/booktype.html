@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<div id="type">
+    <table>
+        <thead>
+        <tr>
+            <td>类型名</td>
+            <td>创建时间</td>
+            <td>更新时间</td>
+            <td><a @click.prevent="showAdd">添加类型</a></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="booktype in bookTypeList">
+            <td><p v-text="booktype.name"></p></td>
+            <td><p v-text="booktype.createTime"></p></td>
+            <td><p v-text="booktype.updateTime"></p></td>
+            <td><a @click.prevent="showUpdate(booktype.id)">修改</a></td>
+            <td><a @click.prevent="delete(booktype.id)">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <form v-if="display">
+        name: <input v-model="typeForm.name" v-text="typeForm.name" type="text" required/> <br/>
+        createtime: <input v-model="typeForm.createtime" v-text type="date" required/><br/>
+        updatetime: <input v-model="typeForm.updatetime" v-text type="date" required/><br/>
+        <a @click.prevent="submitAdd" class="btn btn-default btn-sm" href="">确定添加</a>
+        <a @click.prevent="submitUpdate" class="btn btn-default btn-sm" href="">确定修改</a>
+    </form>
+</div>
+<script>
+    let type = new Vue({
+        el: "#type",
+        data: {
+            display: false,
+            displayMode: '',
+            bookTypeList: [],
+            typeForm: {
+                id: 0,
+                name: '',
+                createtime: '',
+                updatetime: '',
+            }
+        },
+        methods: {
+            showPageInfo() {
+                let vueObj = this;
+                $.post("/booktype/selectAll", function (data) {
+                    console.log(data)
+                    vueObj.bookTypeList = data;
+                })
+            },
+            showAdd() {
+                this.display = true;
+                this.displayMode = "showAdd"
+            },
+            showUpdate() {
+                this.display = true;
+                this.displayMode = "showAdd"
+                this.id = id;
+            },
+            submitAdd() {
+                $.post("/booktype/add", function (data) {
+
+                    if (data == "ok") {
+                        alert("修改成功")
+                    }
+                })
+            },
+            submitUpdate(bookTypeId) {
+                console.log("当前typeId " + bookTypeId)
+
+                $.post("/booktype/update", {id: bookTypeId}, function (data) {
+
+                    if (data == "ok") {
+                        alert("修改成功")
+                    } else {
+                        alert("当前typeId " + data)
+                        console.log("当前typeId " + data)
+                    }
+                })
+            },
+            delete(bookTypeId) {
+                console.log("当前typeId " + bookTypeId)
+
+                $.post("/booktype/delete", {id: bookTypeId}, function (data) {
+                    if (data == "ok") {
+                        alert("刪除成功")
+                    } else {
+                        alert("当前typeId " + data)
+                        console.log("当前typeId " + data)
+                    }
+                })
+            },
+        },
+        created() {
+            this.showPageInfo();
+        }
+    })
+</script>
+</body>
+</html>

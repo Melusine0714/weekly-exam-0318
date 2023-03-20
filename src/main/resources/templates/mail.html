@@ -2,89 +2,87 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-     <title>邮箱</title>
+    <title>邮箱</title>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 <body>
 <form>
     <div id="app">
-<div class="form-group">
+        <div class="form-group">
 
-    <label for="email">收件人邮箱:</label>
-    <input type="email" v-model="registerForm.email" name="email" class="form-control" id="email" placeholder="请输入邮箱地址">
-    <label for="email">邮件标题:</label>
-    <input type="text" v-model="registerForm.title" name="title" class="form-control" id="title" placeholder="请输入邮件标题">
-    <label for="email">邮件内容:</label>
-   <input type="text" v-model="registerForm.content" name="content" class="form-control" id="content" placeholder="请输入邮件标题">
-    <button id="getEmailCodeBtn" class="btn btn-primary" @click.prevent="getEmailCode">发送邮件</button>
+            <label for="email">收件人邮箱:</label>
+            <input type="email" v-model="registerForm.email" name="email" class="form-control" id="email"
+                   placeholder="请输入邮箱地址">
+            <label for="email">邮件标题:</label>
+            <input type="text" v-model="registerForm.title" name="title" class="form-control" id="title"
+                   placeholder="请输入邮件标题">
+            <label for="email">邮件内容:</label>
+            <input type="text" v-model="registerForm.content" name="content" class="form-control" id="content"
+                   placeholder="请输入邮件标题">
+            <button id="getEmailCodeBtn" class="btn btn-primary" @click.prevent="getEmailCode">发送邮件</button>
 
-</div>
+        </div>
     </div>
 </form>
 <script>
-
     console.log("------email-----")
 
     let app = new Vue({
-        el:"#app",
-        data:{
-            errorInfo:'',
-            registerForm:{
-                email:'',
-                title:'',
-                content:''
+        el: "#app",
+        data: {
+            errorInfo: '',
+            registerForm: {
+                email: '',
+                title: '',
+                content: ''
             }
 
         },
-        methods:{
-            getEmailCode(){
+        methods: {
+            getEmailCode() {
                 console.log(this.registerForm.email)
 
-                if(!this.registerForm.email){ //js里空字符串作为bool条件判断时等价于false
+                if (!this.registerForm.email) { //js里空字符串作为bool条件判断时等价于false
                     alert("邮箱地址不能为空");
                     return;
                 }
 
                 let vueObj = this;
 
-                $.post("/email/getEmailCode",{email:this.registerForm.email,
-                    title:this.registerForm.title,
-                    content:this.registerForm.content},function (data) {
+                $.post("/email/getEmailCode", {
+                    email: this.registerForm.email,
+                    title: this.registerForm.title,
+                    content: this.registerForm.content
+                }, function (data) {
 
-                    if(data=="ok"){
+                    if (data == "ok") {
 
                         let btn = $("#getEmailCodeBtn");
                         let time = 60;
-                        btn.attr("disabled",true)  //置为不可用
-                        btn.text(time+"秒可重新发送邮件");
+                        btn.attr("disabled", true)  //置为不可用
+                        btn.text(time + "秒可重新发送邮件");
 
-                        let timeInterval = setInterval(function (){
+                        let timeInterval = setInterval(function () {
                             time--;
-                            if (time<0){
+                            if (time < 0) {
                                 clearInterval(timeInterval)
-                                btn.attr("disabled",false)
+                                btn.attr("disabled", false)
                                 btn.text("重新发送邮件");
-                            }else {
-                                btn.text(time+"秒可重新发送邮件");
+                            } else {
+                                btn.text(time + "秒可重新发送邮件");
                             }
-                        },1000)
-
-
+                        }, 1000)
                         vueObj.errorInfo = "";
-                    }else {
+                    } else {
                         vueObj.errorInfo = data;
                     }
-
                 })
-
-            }
-            ,
-
+            },
         },
-        created(){
-
+        created() {
         }
     })
 

@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.hzwn.work0318.pojo.Book">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="typeId" column="typeId" jdbcType="INTEGER"/>
+            <result property="typeid" column="typeId" jdbcType="INTEGER"/>
             <result property="provider" column="provider" jdbcType="VARCHAR"/>
             <result property="author" column="author" jdbcType="VARCHAR"/>
             <result property="price" column="price" jdbcType="DECIMAL"/>
